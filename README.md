@@ -40,7 +40,7 @@ Mitmproxy-based AI traffic auditing and dashboard system. Intercepts ChatGPT/API
 **After install LM Studio you need to turn on Local Server**
 
 ## Quick Start
-Video YouTube
+Video: [YouTube](https://youtu.be/VbnR5COULeo)
 
 ### 1. Clone & setup
 
