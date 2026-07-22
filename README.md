@@ -47,7 +47,16 @@ Video YouTube
 ```bash
 git clone https://github.com/chenxi1227/AI-NetPulse.git && cd AI-NetPulse/
 ```
-Run the "Windows_start.bat" or "Linux_start.sh"
+
+**Linux / macOS:**
+```bash
+bash Linux_start.sh
+```
+
+**Windows:**
+```bat
+Windows_start.bat
+```
 
 This will:
 - Check Python and Node versions
@@ -73,7 +82,6 @@ online_model = "model"
 ```
 
 ### 3. Run
-
 **Linux / macOS:**
 ```bash
 bash Linux_start.sh
@@ -83,6 +91,7 @@ bash Linux_start.sh
 ```bat
 Windows_start.bat
 ```
+
 
 ### 4. Access
 
