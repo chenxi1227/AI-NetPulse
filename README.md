@@ -25,10 +25,10 @@ Mitmproxy-based AI traffic auditing and dashboard system. Intercepts ChatGPT/API
 
 ## Prerequisites
 | System | Tested |
-|--------|--------|
+| :--- | :---: |
 | Ubuntu 24.04.4 | ✅ |
-| Windows 10 (1809) | ✅ |
-| macOS | ❓(not tested yet)  |
+| Windows 10 (1809) or later | ✅ |
+| macOS | ❓ *(Not tested yet)* |
 
 | Dependency | Version |
 |-----------|---------|
@@ -99,6 +99,11 @@ Just double-click "Windows_start.bat"
 *refer to the console
 
 Default login: `admin` / `admin`
+
+- **Role-Based Access Control (RBAC):**
+  - `admin`: Bypasses all validation checks and security auditing.
+  - `user`: Every action is strictly tracked, recorded, and audited by the system.
+  - *Note: Only `admin` has permission to access the dashboard.*
 
 ## Notes
 
