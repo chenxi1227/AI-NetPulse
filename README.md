@@ -5,7 +5,7 @@ Mitmproxy-based AI traffic auditing and dashboard system. Intercepts ChatGPT/API
 
 **Currently supporting chatgpt.com only for demo purposes**
 
-## [Online Demo](https://ai-net-pulse-knqa0zb28-chenxi1227s-projects.vercel.app/)
+## [Online Demo](https://online-demo-five.vercel.app/)
 
 ## TODO List
 | Function |  |
