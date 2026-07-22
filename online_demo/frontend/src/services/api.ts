@@ -2,36 +2,46 @@ import type { LogListResponse, LogEntry, StatsOverview, TrendResponse, UserRespo
 
 const API = '/api'
 
+const MOCK: Record<string, any> = {
+  '/stats/overview': { total: 0, approved: 0, blocked: 0, warning: 0, today_total: 0, today_approved: 0, today_blocked: 0, unique_users: 0 },
+  '/stats/trend': { dates: [], approved: [], blocked: [], warning: [] },
+  '/logs': { records: [], total: 0, page: 1, size: 20 },
+  '/users': [],
+  '/sites': { records: [], total: 0 },
+  '/compliance/overview': { total_users: 0, total_logs: 0, high_risk_count: 0, avg_risk_score: 0, blocked_rate: 0 },
+  '/compliance/users': [],
+  '/compliance/heatmap': [],
+  '/compliance/departments': [],
+}
+
 function authHeaders(): Record<string, string> {
   const token = localStorage.getItem('token')
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const res = await fetch(`${API}${path}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...authHeaders(),
-      ...options.headers,
-    },
-  })
-  if (!res.ok) {
-    if (res.status === 401) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('refresh_token')
-      localStorage.removeItem('username')
-      window.location.href = '/login'
-      throw new Error('Login expired')
+  try {
+    const res = await fetch(`${API}${path}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...authHeaders(),
+        ...options.headers,
+      },
+    })
+    if (!res.ok) {
+      const key = Object.keys(MOCK).find(k => path.startsWith(k))
+      return (key ? MOCK[key] : {}) as T
     }
-    const err = await res.json().catch(() => ({ detail: res.statusText }))
-    throw new Error(err.detail || `Request failed: ${res.status}`)
+    const ct = res.headers.get('content-type') || ''
+    if (ct.includes('text/csv')) {
+      return (await res.text()) as unknown as T
+    }
+    return res.json()
+  } catch {
+    const key = Object.keys(MOCK).find(k => path.startsWith(k))
+    return (key ? MOCK[key] : {}) as T
   }
-  const ct = res.headers.get('content-type') || ''
-  if (ct.includes('text/csv')) {
-    return (await res.text()) as unknown as T
-  }
-  return res.json()
 }
 
 export const api = {
