@@ -21,16 +21,6 @@ Mitmproxy-based AI traffic auditing and dashboard system. Intercepts ChatGPT/API
 | Restricted Wi-Fi Zone |  |
 | Dashboard | ✅ |
 
-## Screenshots
-![login](./images/login.png)
-![mainpage](./images/mainpage.png)
-![auditlogs](./images/auditlogs.png)
-![pdf](./images/pdf.png)
-![compliance](./images/compliance.png)
-![site](./images/site.png)
-![site_blk](./images/site_blk.png)
-![user](./images/user.png)
-
 ## Prerequisites
 | System | Tested |
 |--------|--------|
@@ -53,7 +43,7 @@ Video YouTube
 ### 1. Clone & setup
 
 ```bash
-git clone https://github.com/chenxi1227/test1.git && cd test1/
+git clone https://github.com/chenxi1227/AI-NetPulse.git && cd AI-NetPulse/
 ```
 Run the "Windows_start.bat" or "Linux_start.sh"
 
@@ -122,3 +112,13 @@ Modern formats (.docx/.pptx/.xlsx) are handled by Python libraries directly. For
 - **macOS:** `brew install libreoffice`
 - **Windows:** Download [LibreOffice Portable](https://portableapps.com/apps/office/libreoffice_portable) and extract to `libreoffice/` in the project directory (auto-detected). Or install normally.
 - **Not installed:** Legacy formats will be skipped silently; all other features work normally.
+
+## Screenshots
+![login](./images/login.png)
+![mainpage](./images/mainpage.png)
+![auditlogs](./images/auditlogs.png)
+![pdf](./images/pdf.png)
+![compliance](./images/compliance.png)
+![site](./images/site.png)
+![site_blk](./images/site_blk.png)
+![user](./images/user.png)
