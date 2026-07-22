@@ -69,7 +69,7 @@ function mockGet(path: string, options?: RequestInit): any {
   if (path.startsWith('/logs/export/csv')) return 'id,user,message,status\n1,alice,test,APPROVED\n'
   if (path.startsWith('/logs/')) {
     const id = parseInt(path.split('/')[2])
-    if (!isNaN(id)) return LOGS.find(l => l.id === id) || LOGS[0]
+    if (!isNaN(id)) return { ...(LOGS.find(l => l.id === id) || LOGS[0]), files: [] }
   }
   if (path.startsWith('/logs')) return { records: LOGS.slice(0, 20), total: LOGS.length, page: 1, size: 20 }
   if (path.startsWith('/users')) {
