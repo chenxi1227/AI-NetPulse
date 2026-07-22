@@ -54,9 +54,7 @@ bash Linux_start.sh
 ```
 
 **Windows:**
-```bat
-Windows_start.bat
-```
+Just double-click "Windows_start.bat"
 
 This will:
 - Check Python and Node versions
@@ -88,9 +86,7 @@ bash Linux_start.sh
 ```
 
 **Windows:**
-```bat
-Windows_start.bat
-```
+Just double-click "Windows_start.bat"
 
 
 ### 4. Access
