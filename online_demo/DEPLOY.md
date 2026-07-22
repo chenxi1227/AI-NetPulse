@@ -6,14 +6,15 @@ Does NOT include mitmproxy or local AI.
 ## Architecture
 
 ```
-User → Vercel (frontend) → /api/* rewrite → Render (backend) → PostgreSQL
+User → Vercel (frontend) → /api/* rewrite → Render (backend) → Supabase PostgreSQL
 ```
 
 ## Prerequisites
 
 - GitHub account
-- [Render](https://render.com) account (free)
+- [Render](https://render.com) account (free, no credit card)
 - [Vercel](https://vercel.com) account (free)
+- [Supabase](https://supabase.com) account (free, no credit card)
 
 ---
 
@@ -21,6 +22,7 @@ User → Vercel (frontend) → /api/* rewrite → Render (backend) → PostgreSQ
 
 ```bash
 cd /home/qq/Desktop/AI\ NetPulse
+# remove online_demo from .gitignore first
 git add online_demo/
 git commit -m "add online_demo deployment package"
 git remote add origin git@github.com:YOUR_USER/YOUR_REPO.git
@@ -29,18 +31,29 @@ git push -u origin main
 
 ---
 
-## 2. Deploy Backend on Render
+## 2. Create Supabase Database
 
-### 2a. Create PostgreSQL
+1. Go to [supabase.com](https://supabase.com) → **Start your project**
+2. Fill in:
+   - **Organization:** your org
+   - **Name:** `ai-netpulse-db`
+   - **Database Password:** save this somewhere
+   - **Region:** choose one close to you
+3. Wait a minute for the database to provision
+4. Go to **Project Settings** → **Database** → **Connection string** → **URI**
+   - Copy the connection string: `postgresql://postgres:YOUR_PASSWORD@db.xxx.supabase.co:5432/postgres`
+   - Append `?sslmode=require` at the end:
+     ```
+     postgresql://postgres:YOUR_PASSWORD@db.xxx.supabase.co:5432/postgres?sslmode=require
+     ```
 
-1. In Render Dashboard → **New** → **PostgreSQL**
-2. Select **Free** plan
-3. Name: `ai-netpulse-db`
-4. Once created, copy the **Internal Database URL** (starts with `postgresql://`)
+---
 
-### 2b. Create Web Service
+## 3. Deploy Backend on Render
 
-1. **New** → **Web Service**
+### Create Web Service
+
+1. [render.com](https://render.com) → **New** → **Web Service**
 2. Connect your GitHub repo
 3. Settings:
    - **Name:** `ai-netpulse-backend`
@@ -54,7 +67,7 @@ git push -u origin main
 
 | Variable | Value |
 |----------|-------|
-| `DATABASE_URL` | Your PostgreSQL Internal Database URL from step 2a |
+| `DATABASE_URL` | Supabase connection string (with `?sslmode=require`) |
 | `JWT_SECRET` | A random secret string |
 | `API_KEY` | A random API key |
 | `CORS_ORIGINS` | `https://online-demo.vercel.app` (replace with your Vercel URL) |
@@ -65,9 +78,9 @@ Wait for the deployment to finish. Note your Render URL: `https://ai-netpulse-ba
 
 ---
 
-## 3. Deploy Frontend on Vercel
+## 4. Deploy Frontend on Vercel
 
-### 3a. Update vercel.json
+### 4a. Update vercel.json
 
 Edit `online_demo/frontend/vercel.json` — replace `https://your-app.onrender.com` with your actual Render URL:
 
@@ -82,7 +95,7 @@ Edit `online_demo/frontend/vercel.json` — replace `https://your-app.onrender.c
 
 Commit and push.
 
-### 3b. Import to Vercel
+### 4b. Import to Vercel
 
 1. [vercel.com](https://vercel.com) → **Add New** → **Project**
 2. Import your GitHub repo
@@ -97,7 +110,7 @@ Your URL: `https://online-demo.vercel.app`
 
 ---
 
-## 4. Verify
+## 5. Verify
 
 1. Visit `https://online-demo.vercel.app`
 2. Login with `admin` / `admin`
@@ -107,5 +120,5 @@ Your URL: `https://online-demo.vercel.app`
 ## Notes
 
 - Render free plan spins down after 15 min of inactivity. First request after idle takes ~30s to wake up.
-- Render free PostgreSQL: 1GB storage, auto-expires after 90 days.
+- Supabase free plan: 500MB database, never expires.
 - File uploads are stored as BYTEA in PostgreSQL (not filesystem).
