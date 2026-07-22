@@ -1,0 +1,28 @@
+Python version required 3.12.x
+Download link: https://www.python.org/downloads/release/python-3120/
+
+Node.js
+Download link: https://nodejs.org/en/download/current
+
+Before starting the program, you need to install LM Studio.
+Download link: https://lmstudio.ai/
+
+After installation, please turn on the local server service.
+You can set the server's IP in the .env file (default is 127.0.0.1:1234/v1).
+
+OR
+
+You can use the online API by changing the "use_online" section in the .env file and adding your API_KEY.
+
+=============================================
+
+Windows
+Just double-click "Windows_start.bat".
+
+Linux / macOS
+Run: sudo ./Linux_start.sh
+
+Note: 
+1. After running "Windows_start.bat" or "Linux_start.sh", the system will automatically generate the .env file (if it doesn't exist).
+2. First time run vite on Windows may need a period of time
+   [vite] (client) [optimizer] bundling dependencies...

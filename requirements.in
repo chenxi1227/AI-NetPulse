@@ -1,0 +1,15 @@
+ddgs
+fastapi
+httpx
+mitmproxy
+openai
+openpyxl
+pydantic
+pypdf
+python-dotenv
+python_docx
+python_jose
+python_pptx
+SQLAlchemy
+tavily_python
+xlrd
