@@ -33,7 +33,7 @@ Mitmproxy-based AI traffic auditing and dashboard system. Intercepts ChatGPT/API
 | [Python](https://www.python.org/downloads/release/python-3120/)    | 3.12.x   |
 | [Node.js](https://nodejs.org/en/download/current)   | 18+     |
 | npm       | 9+      |
-| [LM Studio](https://lmstudio.ai/) | any |
+| [LM Studio](https://lmstudio.ai/download) | any |
 
 **After install LM Studio you need to turn on Local Server**
 

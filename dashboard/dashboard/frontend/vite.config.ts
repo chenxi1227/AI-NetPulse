@@ -10,4 +10,7 @@ export default defineConfig({
       '/api': 'http://localhost:8000',
     },
   },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', 'recharts', 'lucide-react'],
+  },
 })
