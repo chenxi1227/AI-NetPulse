@@ -1,7 +1,4 @@
-import type { LogListResponse, LogEntry, StatsOverview, TrendResponse, UserResponse, LoginResponse, SiteListResponse, SiteEntry, ComplianceOverview, UserCompliance, ComplianceHeatmapItem, DepartmentCompliance } from '../types'
-
-
-const API = '/api'
+import type { LogEntry, StatsOverview, TrendResponse, UserResponse, SiteEntry } from '../types'
 
 function generateTrend(): TrendResponse {
   const dates: string[] = []
@@ -65,7 +62,8 @@ const STATS: StatsOverview = {
   unique_users: new Set(LOGS.map(l => l.userid)).size,
 }
 
-function mockGet(path: string): any {
+function mockGet(path: string, options?: RequestInit): any {
+  if (path.startsWith('/auth/login')) return { access_token: 'demo-token', refresh_token: 'demo-refresh', token_type: 'bearer' }
   if (path.startsWith('/stats/overview')) return STATS
   if (path.startsWith('/stats/trend')) return TREND
   if (path.startsWith('/logs/export/csv')) return 'id,user,message,status\n1,alice,test,APPROVED\n'
@@ -73,8 +71,12 @@ function mockGet(path: string): any {
     const id = parseInt(path.split('/')[2])
     if (!isNaN(id)) return LOGS.find(l => l.id === id) || LOGS[0]
   }
-  if (path.startsWith('/logs') || path.startsWith('/logs?')) return { records: LOGS.slice(0, 20), total: LOGS.length, page: 1, size: 20 }
-  if (path.startsWith('/users')) return USERS
+  if (path.startsWith('/logs')) return { records: LOGS.slice(0, 20), total: LOGS.length, page: 1, size: 20 }
+  if (path.startsWith('/users')) {
+    if (options?.method === 'POST') return USERS[0]
+    if (options?.method === 'DELETE' || options?.method === 'PATCH') return { status: 'ok' }
+    return USERS
+  }
   if (path.startsWith('/sites')) return { records: SITES, total: SITES.length }
   if (path.startsWith('/compliance/overview')) return { total_users: USERS.length, total_logs: LOGS.length, high_risk_count: 2, avg_risk_score: 0.35, blocked_rate: 0.12 }
   if (path.startsWith('/compliance/users')) return USERS.filter(u => u.is_active).map(u => ({
@@ -99,90 +101,42 @@ function mockGet(path: string): any {
   return {}
 }
 
-function authHeaders(): Record<string, string> {
-  const token = localStorage.getItem('token')
-  return token ? { Authorization: `Bearer ${token}` } : {}
-}
-
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  try {
-    const res = await fetch(`${API}${path}`, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...authHeaders(),
-        ...options.headers,
-      },
-    })
-    if (!res.ok) return mockGet(path) as T
-    const ct = res.headers.get('content-type') || ''
-    if (ct.includes('text/csv')) return (await res.text()) as unknown as T
-    return res.json()
-  } catch { return mockGet(path) as T }
+function delay<T>(val: T): Promise<T> {
+  return new Promise(r => setTimeout(r, 200 + Math.random() * 300, val))
 }
 
 export const api = {
-  login: (username: string, password: string) =>
-    request<LoginResponse>('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ username, password }),
-    }),
+  login: (_u: string, _p: string) => delay(mockGet('/auth/login')),
 
-  listLogs: (params: {
-    page?: number
-    size?: number
-    status?: string
-    user?: string
-    start?: string
-    end?: string
-    search?: string
-    sort?: string
-  } = {}) => {
-    const q = new URLSearchParams()
-    Object.entries(params).forEach(([k, v]) => { if (v !== undefined && v !== '') q.set(k, String(v)) })
-    return request<LogListResponse>(`/logs?${q}`)
-  },
+  listLogs: (_params?: any) => delay(mockGet('/logs')),
 
-  getLog: (id: number) => request<LogEntry>(`/logs/${id}`),
+  getLog: (id: number) => delay(mockGet(`/logs/${id}`)),
 
-  exportCsv: (params: { status?: string; user?: string; start?: string; end?: string; search?: string } = {}) => {
-    const q = new URLSearchParams()
-    Object.entries(params).forEach(([k, v]) => { if (v) q.set(k, String(v)) })
-    return request<string>(`/logs/export/csv?${q}`)
-  },
+  exportCsv: (_params?: any) => delay(mockGet('/logs/export/csv')),
 
-  getOverview: () => request<StatsOverview>('/stats/overview'),
+  getOverview: () => delay(mockGet('/stats/overview')),
 
-  getTrend: (days = 30) => request<TrendResponse>(`/stats/trend?days=${days}`),
+  getTrend: (_days?: number) => delay(mockGet('/stats/trend')),
 
-  listUsers: () => request<UserResponse[]>('/users'),
+  listUsers: () => delay(mockGet('/users')),
 
-  createUser: (data: { username: string; password: string; role?: string; department?: string; is_active?: boolean }) =>
-    request<UserResponse>('/users', { method: 'POST', body: JSON.stringify(data) }),
+  createUser: (data: any) => delay(mockGet('/users', { method: 'POST' })),
 
-  updateUser: (id: number, data: { is_active?: boolean; role?: string; department?: string }) =>
-    request<UserResponse>(`/users/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+  updateUser: (_id: number, _data: any) => delay(mockGet('/users', { method: 'PATCH' })),
 
-  deleteUser: (id: number) =>
-    request<{ status: string }>(`/users/${id}`, { method: 'DELETE' }),
+  deleteUser: (_id: number) => delay(mockGet('/users', { method: 'DELETE' })),
 
-  listSites: (params: { q?: string; is_ai?: number; is_authorized?: number; page?: number; size?: number } = {}) => {
-    const q = new URLSearchParams()
-    Object.entries(params).forEach(([k, v]) => { if (v !== undefined && v !== '') q.set(k, String(v)) })
-    return request<SiteListResponse>(`/sites?${q}`)
-  },
+  listSites: (_params?: any) => delay(mockGet('/sites')),
 
-  getSite: (domain: string) =>
-    request<SiteEntry>(`/sites/${encodeURIComponent(domain)}`),
+  getSite: (domain: string) => delay(mockGet(`/sites/${encodeURIComponent(domain)}`)),
 
-  updateSite: (domain: string, data: { is_authorized?: number }) =>
-    request<{ status: string }>(`/sites/${encodeURIComponent(domain)}`, { method: 'PUT', body: JSON.stringify(data) }),
+  updateSite: (_domain: string, _data: any) => delay(mockGet('/sites', { method: 'PUT' })),
 
-  getComplianceOverview: () => request<ComplianceOverview>('/compliance/overview'),
+  getComplianceOverview: () => delay(mockGet('/compliance/overview')),
 
-  getComplianceUsers: () => request<UserCompliance[]>('/compliance/users'),
+  getComplianceUsers: () => delay(mockGet('/compliance/users')),
 
-  getComplianceHeatmap: () => request<ComplianceHeatmapItem[]>('/compliance/heatmap'),
+  getComplianceHeatmap: () => delay(mockGet('/compliance/heatmap')),
 
-  getComplianceDepartments: () => request<DepartmentCompliance[]>('/compliance/departments'),
+  getComplianceDepartments: () => delay(mockGet('/compliance/departments')),
 }
