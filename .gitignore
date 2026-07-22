@@ -7,7 +7,6 @@ venv/
 env/
 ENV/
 
-online_demo/
 
 # Environment
 .env
