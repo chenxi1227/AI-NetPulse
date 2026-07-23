@@ -8,7 +8,7 @@ Mitmproxy-based AI traffic auditing and dashboard system. Intercepts ChatGPT/API
 ## Credit
 [@Cloudy0717](https://github.com/Cloudy0717)
 <br>
-@whann
+[@twhannn](https://github.com/Cloudy0717)
 
 ## [Online Demo](https://online-demo-five.vercel.app/)
 username/password: (any/any)
