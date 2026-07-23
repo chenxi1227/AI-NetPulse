@@ -116,6 +116,7 @@ Default login: `admin` / `admin`
 - mitmproxy requires the proxy to be configured on the client device (CA certificate installation for HTTPS inspection)
 - after connect to proxy open [mitm.it](http://mitm.it) on browser and install the CA certificate
 - The proxy runs on port 8080 by default
+- If you want to remove sample data， just delete the project.db in the project folder
 
 - First time run vite on Windows may need a period of time
 ```bat
