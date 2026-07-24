@@ -11,7 +11,7 @@ def run(cmd, cwd=None, shell=True):
 def check_python():
     v = sys.version_info
     if v.major < 3 or (v.major == 3 and v.minor < 10):
-        print("Error: Python 3.10+ required")
+        print("Error: Python 3.12.x required")
         sys.exit(1)
     print(f"[setup] Python {v.major}.{v.minor}.{v.micro} OK")
 
